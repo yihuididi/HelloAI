@@ -1,0 +1,112 @@
+.wrapper {
+    position: relative;
+}
+
+.profile {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-gray-lightest);
+    border-radius: 9999px;
+    padding: 0 0.75rem;
+    color: var(--color-gray-darker);
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 34px;
+    gap: 0.5rem;
+    max-width: 150px;
+    font-size: 0.875rem;
+    transition: all .2s;
+}
+
+.displayName {
+    overflow: hidden;
+}
+
+.displayName.long {
+    mask-image: linear-gradient(to right, black 65%, transparent 100%);
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+}
+
+.profile:hover {
+    background-color: var(--color-gray);
+    color: var(--color-purple-lighter);
+}
+
+.container {
+    color: var(--color-gray-lighter);
+    background-color: #1f1f1f;
+    font-weight: 600;
+    position: absolute;
+    width: 275px;
+    right: 0;
+    top: calc(var(--navbar-height) / 2 + 20px);
+    border-radius: 12px;
+    box-shadow: 0 0 5px var(--color-gray-darker);
+    max-height: calc(100vh - var(--navbar-height));
+    overflow-y: auto;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .2s, visibility .2s;
+}
+
+.container.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.header {
+    text-align: center;
+    background-color: var(--color-gray-dark);
+    padding: 30px 0 15px 0;
+
+    img {
+        width: 30px;
+        border-radius: 9999px;
+        margin-bottom: 1.1rem;
+    }
+
+    .username {
+        font-size: 1.3rem;
+    }
+
+    .email {
+        font-size: 0.7rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+    }
+
+    .manage {
+        border-radius: 5px;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid var(--color-purple-light);
+        font-size: 0.8rem;
+        transition: box-shadow 0.25s;
+    }
+
+    .manage:hover {
+        box-shadow: 0 0 5px var(--color-purple-light);
+    }
+}
+
+.content, .footer {
+    font-size: .8rem;
+    margin: .3rem 0;
+
+    .item {
+        width: 100%;
+        padding: .5rem .875rem;
+        transition: background-color 0.2s;
+        box-sizing: border-box;
+    }
+
+    .item:hover {
+        background-color: var(--color-gray-dark);
+    }
+}
+
+.content {
+    border-bottom: 2px solid var(--color-purple-lighter);
+}

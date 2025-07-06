@@ -1,0 +1,73 @@
+:root {
+    --font-size-base: 16px;
+    --font-weight-base: 400;
+    --line-height: 24px;
+
+    --color-gray: #424242;
+    --color-gray-light: #cccccc;
+    --color-gray-lighter: #ececec;
+    --color-gray-lightest: #ffffff;
+    --color-gray-dark: #303030;
+    --color-gray-darker: #161616;
+    --color-gray-darkest: #000000;
+
+    --color-purple: #646cff;
+    --color-purple-light: #747bff;
+    --color-purple-lighter: #9499ff;
+    --color-purple-lightest: #bcc0ff;
+    --color-purple-dark: #535bf2;
+    --color-purple-darker: #454ce1;
+    --color-purple-darkest: #3138bd;
+    --color-purple-neon: #c063ed;
+
+    --color-blue: #3b82f6;
+    --color-blue-light: #60a5fa;
+    --color-blue-lighter: #93c5fd;
+    --color-blue-lightest: #bfdbfe;
+    --color-blue-dark: #2563eb;
+    --color-blue-darker: #1d4ed8;
+    --color-blue-darkest: #1e40af;
+    --color-blue-neon: #41d1ff;
+
+    --color-red: #ef4444;
+    --color-red-neon: #f81c1f;
+    --color-orange: #f97316;
+    --color-yellow: #eab308;
+    --color-green: #22c55e;
+
+    --navbar-height: 64px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*::before, *::after {
+    box-sizing: inherit;
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    font-size: var(--font-size-base);
+    background-color: var(--color-gray-darker);
+    color: var(--color-gray-lightest);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: var(--line-height);
+    font-weight: var(--font-weight-base);
+}

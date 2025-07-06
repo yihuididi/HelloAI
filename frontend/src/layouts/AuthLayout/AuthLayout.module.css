@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+.background {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(to bottom right, #1a1a2e, #121218, #0d0d12);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 15px;
+    left: 15px;
+    gap: .8rem;
+    padding: 1rem;
+
+    div {
+        font-size: 1.7rem;
+        font-weight: 600;
+        background: linear-gradient(to right top, var(--color-blue-neon), var(--color-purple-neon));
+        background-clip: text;
+        color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    img {
+        height: 40px;
+    }
+}
+
+.blueBlob {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 6rem;
+    height: 6rem;
+    background-color: rgba(59, 131, 246, 0.141);
+    border-radius: 50%;
+    filter: blur(40px);
+}
+
+.purpleBlob {
+    position: absolute;
+    bottom: 20%;
+    left: 15%;
+    width: 8rem;
+    height: 8rem;
+    background-color: rgba(169, 85, 247, 0.093);
+    border-radius: 50%;
+    filter: blur(40px);
+}
+
+.centerGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16rem;
+    height: 16rem;
+    transform: translate(-50%, -50%);
+}
+
+.centerGlowInner {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(59, 131, 246, 0.172), rgba(169, 85, 247, 0.188));
+    border-radius: 50%;
+    filter: blur(60px);
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4,
+.dot5 {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+}
+
+.dot1 {
+    top: 30%;
+    left: 20%;
+    background-color: rgba(96, 165, 250, 0.5);
+}
+
+.dot2 {
+    top: 70%;
+    left: 40%;
+    background-color: rgba(192, 132, 252, 0.5);
+}
+
+.dot3 {
+    top: 25%;
+    left: 60%;
+    background-color: rgba(96, 165, 250, 0.5);
+}
+
+.dot4 {
+    top: 45%;
+    left: 80%;
+    background-color: rgba(192, 132, 252, 0.5);
+}
+
+.dot5 {
+    top: 85%;
+    left: 30%;
+    background-color: rgba(96, 165, 250, 0.5);
+}
+
+.container {
+    padding: 3rem;
+    width: 50%;
+    max-width: 800px;
+    min-width: 450px;
+    border-radius: 10px;
+    border: 1px solid var(--color-gray-lightest);
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    color: var(--color-gray-light);
+    box-shadow: 0 3px 10px var(--color-purple-light);
+    backdrop-filter: blur(30px);
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .brand {
+        display: none;
+    }
+
+    .container {
+        height: 100%;
+        width: 100%;
+        border: none;
+        border-radius: 0;
+    }
+}

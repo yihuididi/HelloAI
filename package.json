@@ -2,9 +2,12 @@
   "name": "helloai",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon backend/server.js"
+    "dev": "nodemon",
+    "build:backend": "tsc -p tsconfig.json",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "start": "node dist/backend/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,11 +22,24 @@
   },
   "homepage": "https://github.com/yihuididi/HelloAI#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
-    "mongoose": "^8.16.1"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.10",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
