@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 function Intro() {
   return (
     <>
-      <h1 className={styles.h1}>An interactive AI<br/>startup interviewer</h1>
-      <h3 className={styles.h3}>HelloAI is specially designed for students<br/>of EG4301 to practise their startup pitch.</h3>
+      <h1 className={styles.h1}>AI-Powered<br/>Pitch Trainer</h1>
+      <h3 className={styles.h3}>HelloAI helps EG4301 students sharpen their startup pitches through interactive mock interviews</h3>
       <div className={styles.buttons}>
         <Link
           className={styles.start}

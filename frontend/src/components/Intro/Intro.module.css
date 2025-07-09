@@ -1,6 +1,6 @@
 .h1 {
-    margin: 8rem 0 2rem 0;
-    background: radial-gradient(circle at 35% 30%, var(--color-gray-lightest), var(--color-gray-dark));
+    margin: 5.5rem 0 2rem 0;
+    background: radial-gradient(circle at 35% 45%, var(--color-gray-lightest), var(--color-gray-dark));
     background-clip: text;
     color: transparent;
     -webkit-background-clip: text;
@@ -10,6 +10,7 @@
 .h3 {
     color: var(--color-gray);
     margin-bottom: 2rem;
+    max-width: 550px;
 }
 
 .buttons {
