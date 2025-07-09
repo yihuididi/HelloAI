@@ -1,0 +1,63 @@
+.h1 {
+    margin: 8rem 0 2rem 0;
+    background: radial-gradient(circle at 35% 30%, var(--color-gray-lightest), var(--color-gray-dark));
+    background-clip: text;
+    color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.h3 {
+    color: var(--color-gray);
+    margin-bottom: 2rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 1.3rem;
+    height: 48px;
+    font-weight: 500;
+}
+
+.start, .github {
+    border-radius: 10px;
+    width: 125px;
+    transition: transform .25s, border-color .25s;
+    transform: translateY(0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start:hover, .github:hover {
+    transform: translateY(-2px);
+}
+
+.start {
+    background:
+        radial-gradient(141.42% 141.42% at 100% 0%, #ffffff19, #fff0),
+        radial-gradient(140.35% 140.35% at 100% 94.74%, var(--color-purple-neon), #be34fe08),
+        radial-gradient(89.94% 89.94% at 18.42% 15.79%, var(--color-blue-neon), #41d0ff27);
+    box-shadow: 0 1px var(--color-gray-lightest) inset;
+}
+
+.start:hover {
+    background:
+        radial-gradient(141.42% 141.42% at 100% 0%, #ffffff10, #fff0),
+        radial-gradient(140.35% 140.35% at 100% 94.74%, var(--color-purple-neon), #bd34fe00),
+        radial-gradient(89.94% 89.94% at 18.42% 15.79%, var(--color-blue-neon), #41d1ff00);
+}
+
+.github {
+    border: 1px solid var(--color-gray-dark);
+    gap: .5rem;
+
+    .githubLogo {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.github:hover {
+    border-color: var(--color-gray);
+}

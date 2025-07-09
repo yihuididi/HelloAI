@@ -25,14 +25,14 @@
 }
 
 .displayName.long {
-    mask-image: linear-gradient(to right, black 65%, transparent 100%);
+    mask-image: linear-gradient(to right, var(--color-gray-darkest) 65%, transparent 100%);
     mask-size: 100% 100%;
     mask-repeat: no-repeat;
 }
 
 .profile:hover {
-    background-color: var(--color-gray);
-    color: var(--color-purple-lighter);
+    background-color: var(--color-gray-dark);
+    color: var(--color-purple-light);
 }
 
 .container {
