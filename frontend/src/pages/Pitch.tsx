@@ -2,15 +2,30 @@ import React, { useRef, useState, useEffect } from 'react';
 import styles from './Pitch.module.css';
 import { FaMicrophone } from 'react-icons/fa';
 
+// Speech recognition setup
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+
 const ANIMATION_DURATION = 1000;
 const INITIAL_TIME = 5 * 60; // 5 minutes in seconds
 
-function Transcript() {
+function Transcript({ transcript }: { transcript: string }) {
   return (
     <div className={styles.transcriptPage}>
       <h2 className={styles.transcriptTitle}>Transcript</h2>
       <div className={styles.transcriptContent}>
-        <p>This is where your pitch transcript will appear.</p>
+        {transcript ? (
+          <p>{transcript}</p>
+        ) : (
+          <p>No speech was detected during your pitch.</p>
+        )}
       </div>
     </div>
   );
@@ -22,25 +37,32 @@ const Pitch: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
   const [timerActive, setTimerActive] = useState(false);
   const [micPulse, setMicPulse] = useState(1);
-  const [showTranscript, setShowTranscript] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
+  const [transcript, setTranscript] = useState<string>('');
+  const [isListening, setIsListening] = useState(false);
+  const [recentWords, setRecentWords] = useState<string[]>([]);
+  const [wordCounter, setWordCounter] = useState(0);
+  const MAX_WORDS = 5;
   const boxRef = useRef<HTMLDivElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleOk = () => {
     setBlurOut(true);
     setTimeout(() => {
       setLoading(true);
       setTimerActive(true);
+      startSpeechRecognition();
     }, ANIMATION_DURATION);
   };
 
   const handleEndPitch = () => {
     setTimerActive(false);
     stopMic();
+    stopSpeechRecognition();
     setShowCongrats(true);
   };
 
@@ -50,6 +72,7 @@ const Pitch: React.FC = () => {
     if (timeLeft <= 0) {
       setTimerActive(false);
       stopMic();
+      stopSpeechRecognition();
       setShowCongrats(true);
       return;
     }
@@ -108,20 +131,109 @@ const Pitch: React.FC = () => {
     setMicPulse(1);
   }
 
+  // Speech recognition functions
+  const startSpeechRecognition = () => {
+    if (!recognition) {
+      console.error('Speech recognition not supported in this browser');
+      return;
+    }
+    
+    console.log('Starting speech recognition...');
+    
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+    
+    recognition.onstart = () => {
+      console.log('Speech recognition started');
+      setIsListening(true);
+    };
+    
+    recognition.onresult = (event: any) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+      
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + ' ';
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      
+      if (finalTranscript) {
+        console.log('Final transcript received:', finalTranscript);
+        setTranscript(prev => {
+          const newTranscript = prev + finalTranscript;
+          console.log('Current transcript:', newTranscript);
+          return newTranscript;
+        });
+        
+        // Update recent words with animation
+        const words = finalTranscript.trim().split(/\s+/);
+        console.log('Words to add:', words);
+        setRecentWords(prev => {
+          const newWords = [...prev, ...words];
+          const result = newWords.slice(-MAX_WORDS);
+          console.log('Updated recent words:', result);
+          return result;
+        });
+        setWordCounter(prev => prev + words.length);
+      }
+    };
+    
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      setIsListening(false);
+    };
+    
+    recognition.onend = () => {
+      setIsListening(false);
+      // Restart if still in timer mode
+      if (timerActive) {
+        recognition.start();
+      }
+    };
+    
+    try {
+      recognition.start();
+    } catch (error) {
+      console.error('Failed to start speech recognition:', error);
+    }
+  };
+  
+  const stopSpeechRecognition = () => {
+    if (recognition) {
+      recognition.stop();
+      setIsListening(false);
+    }
+  };
+
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
 
-  const handleContinueToTranscript = () => {
-    setShowCongrats(false);
-    setShowTranscript(true);
+  const truncateWord = (word: string, maxLength: number = 8) => {
+    if (word.length <= maxLength) return word;
+    return word.substring(0, maxLength) + '...';
   };
 
-  if (showTranscript) {
-    return <Transcript />;
-  }
+  const handleContinueAfterCongrats = () => {
+    setShowCongrats(false);
+    setLoading(false);
+    setBlurOut(false);
+    setTimeLeft(INITIAL_TIME);
+    setRecentWords([]);
+    setWordCounter(0);
+    setTranscript('');
+    // Optionally reset other state as needed
+  };
+
+  const handleSidebarOpen = () => setSidebarOpen(true);
+  const handleSidebarClose = () => setSidebarOpen(false);
 
   if (showCongrats) {
     return (
@@ -129,7 +241,7 @@ const Pitch: React.FC = () => {
         <div className={styles.congratsPopup}>
           <h2 className={styles.congratsTitle}>Good Job on your pitch! 🎉</h2>
           <p className={styles.congratsMessage}>Let us analyse and review your results!</p>
-          <button className={styles.congratsButton} onClick={handleContinueToTranscript}>
+          <button className={styles.congratsButton} onClick={handleContinueAfterCongrats}>
             <span>Continue</span>
           </button>
         </div>
@@ -159,6 +271,13 @@ const Pitch: React.FC = () => {
             >
               <FaMicrophone className={styles.micIcon} />
             </div>
+            {isListening && (
+              <div className={styles.listeningIndicator}>
+                <div className={styles.listeningDot}></div>
+                <div className={styles.listeningDot}></div>
+                <div className={styles.listeningDot}></div>
+              </div>
+            )}
           </div>
           <div className={styles.endPitchFixed}>
             <div className={styles.timerDisplay}>
@@ -168,7 +287,30 @@ const Pitch: React.FC = () => {
               <span>End Pitch</span>
             </button>
           </div>
+          <button className={styles.bottomLeftButton} onClick={handleSidebarOpen}>
+            &gt;|
+          </button>
         </>
+      )}
+      {/* Sidebar overlay */}
+      {loading && (
+        <div className={styles.sidebarOverlay + (sidebarOpen ? ' ' + styles.sidebarOpen : '')} onClick={handleSidebarClose}>
+          <div className={styles.sidebar + (sidebarOpen ? ' ' + styles.sidebarOpen : '')} onClick={e => e.stopPropagation()}>
+            <button className={styles.sidebarCloseButton} onClick={handleSidebarClose}>
+              ×
+            </button>
+            <div className={styles.sidebarContent}>
+              <h2 className={styles.transcriptTitle} style={{ textAlign: 'center', marginTop: 0, marginBottom: '2rem' }}>Transcript</h2>
+              <div className={styles.transcriptWordsRow}>
+                {transcript.trim()
+                  ? transcript.trim().split(/\s+/).reverse().map((word, i) => (
+                      <span key={i} className={styles.transcriptWordPill}>{word}</span>
+                    ))
+                  : <span className={styles.transcriptWordEmpty}>No words yet.</span>}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
