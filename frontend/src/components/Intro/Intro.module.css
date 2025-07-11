@@ -62,3 +62,15 @@
 .github:hover {
     border-color: var(--color-gray);
 }
+
+.blurOut {
+  animation: ld-blur-out 1s 1 linear;
+  animation-fill-mode: forwards;
+  filter: blur(0);
+  opacity: 1;
+}
+
+@keyframes ld-blur-out {
+  0% { filter: blur(0); opacity: 1; }
+  100% { filter: blur(10px); opacity: 0; }
+}
