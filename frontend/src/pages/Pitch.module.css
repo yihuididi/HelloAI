@@ -334,6 +334,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 1rem;
 }
 
 .endPitchButton {
@@ -560,4 +561,134 @@
   to {
     opacity: 1;
   }
+}
+
+.listeningIndicator {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.listeningDot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-blue-neon);
+  border-radius: 50%;
+  animation: listeningPulse 1.4s ease-in-out infinite;
+}
+
+.listeningDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.listeningDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes listeningPulse {
+  0%, 60%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  30% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.recentWordsBox {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.recentWordsTitle {
+  color: var(--color-blue-neon);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.recentWordsContainer {
+  display: flex;
+  gap: 0.3rem;
+  min-height: 1.5rem;
+  width: 100%;
+}
+
+.wordPosition {
+  flex: 1;
+  min-width: 0;
+  max-width: calc((100% - 1.2rem) / 5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.recentWord {
+  background: linear-gradient(90deg, var(--color-purple-neon), var(--color-blue-neon));
+  color: #fff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: wordSlideIn 0.4s ease-out forwards;
+  opacity: 0;
+  transform: translateX(20px);
+  box-shadow: 0 2px 8px rgba(192, 99, 237, 0.3);
+  transition: all 0.3s ease-out;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.recentWord.removing {
+  animation: wordSlideOut 0.3s ease-in forwards;
+}
+
+@keyframes wordSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(20px) scale(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-2px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes wordSlideOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.8);
+  }
+}
+
+.noWordsMessage {
+  color: var(--color-gray-light);
+  font-size: 0.8rem;
+  text-align: center;
+  font-style: italic;
+  margin-top: 0.5rem;
 } 
