@@ -50,41 +50,83 @@ const Pitch: React.FC = () => {
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Add state for QNA workflow
+  const [isQnaSection, setIsQnaSection] = useState(false);
+  const [qnaPending, setQnaPending] = useState(false);
+  const [qnaCountdown, setQnaCountdown] = useState(5);
+
+  // Add a new state for pitch complete popup
+  const [showPitchComplete, setShowPitchComplete] = useState(false);
+
   const handleOk = () => {
     setBlurOut(true);
     setTimeout(() => {
       setLoading(true);
       setTimerActive(true);
+      setIsQnaSection(false);
+      setTimeLeft(INITIAL_TIME);
       startSpeechRecognition();
     }, ANIMATION_DURATION);
   };
 
+  // In handleEndPitch, if in QNA section, show pitch complete popup
   const handleEndPitch = () => {
     setTimerActive(false);
     stopMic();
     stopSpeechRecognition();
-    setShowCongrats(true);
+    if (isQnaSection) {
+      setShowPitchComplete(true);
+    } else {
+      setQnaPending(true);
+      setQnaCountdown(5);
+    }
   };
 
-  // Timer countdown effect
+  // In the timer countdown effect, if in QNA section and timer ends, show pitch complete popup
   useEffect(() => {
     if (!timerActive) return;
     if (timeLeft <= 0) {
-      setTimerActive(false);
-      stopMic();
-      stopSpeechRecognition();
-      setShowCongrats(true);
-      return;
+      if (!isQnaSection) {
+        setQnaPending(true);
+        setQnaCountdown(5);
+        setTimerActive(false);
+        stopMic();
+        stopSpeechRecognition();
+        return;
+      } else {
+        setTimerActive(false);
+        stopMic();
+        stopSpeechRecognition();
+        setShowPitchComplete(true);
+        return;
+      }
     }
     const interval = setInterval(() => {
       setTimeLeft(t => t - 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
+  }, [timerActive, timeLeft, isQnaSection]);
+
+  // QNA popup countdown effect
+  useEffect(() => {
+    if (!qnaPending) return;
+    if (qnaCountdown <= 0) {
+      setQnaPending(false);
+      setIsQnaSection(true);
+      setTimeLeft(600); // 10 minutes
+      setTimerActive(true);
+      // Optionally reset mic color, etc.
+      return;
+    }
+    const interval = setInterval(() => {
+      setQnaCountdown(c => c - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [qnaPending, qnaCountdown]);
 
   // Microphone pulse effect
   useEffect(() => {
-    if (!loading) return;
+    if (!loading && !isQnaSection) return;
     let stopped = false;
     let stream: MediaStream;
     async function startMic() {
@@ -123,7 +165,7 @@ const Pitch: React.FC = () => {
       if (audioContextRef.current) audioContextRef.current.close();
       if (stream) stream.getTracks().forEach(track => track.stop());
     };
-  }, [loading]);
+  }, [loading, isQnaSection]);
 
   function stopMic() {
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
@@ -232,18 +274,44 @@ const Pitch: React.FC = () => {
     // Optionally reset other state as needed
   };
 
+  const handlePitchCompleteClose = () => {
+    setShowPitchComplete(false);
+    setLoading(false);
+    setBlurOut(false);
+    setTimeLeft(INITIAL_TIME);
+    setRecentWords([]);
+    setWordCounter(0);
+    setTranscript('');
+    setIsQnaSection(false);
+  };
+
   const handleSidebarOpen = () => setSidebarOpen(true);
   const handleSidebarClose = () => setSidebarOpen(false);
 
-  if (showCongrats) {
+  // In the return, show the pitch complete popup if showPitchComplete is true
+  if (showPitchComplete) {
     return (
       <div className={styles.congratsOverlay}>
         <div className={styles.congratsPopup}>
-          <h2 className={styles.congratsTitle}>Good Job on your pitch! 🎉</h2>
-          <p className={styles.congratsMessage}>Let us analyse and review your results!</p>
-          <button className={styles.congratsButton} onClick={handleContinueAfterCongrats}>
+          <h2 className={styles.congratsTitle}>Pitch complete, analyzing performance.</h2>
+          <button className={styles.congratsButton} onClick={handlePitchCompleteClose}>
             <span>Continue</span>
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  // In the loaderCircle, change color in QNA mode
+  if (qnaPending) {
+    return (
+      <div className={styles.congratsOverlay}>
+        <div className={styles.congratsPopup}>
+          <h2 className={styles.congratsTitle}>QNA Section</h2>
+          <div className={styles.qnaCountdownNumber}>
+            {qnaCountdown}
+          </div>
+          <p className={styles.congratsMessage}>Starting soon...</p>
         </div>
       </div>
     );
@@ -266,7 +334,7 @@ const Pitch: React.FC = () => {
         <>
           <div className={styles.loaderCircleWrapper}>
             <div
-              className={styles.loaderCircle}
+              className={isQnaSection ? styles.loaderCircleQna : styles.loaderCircle}
               style={{ transform: `scale(${micPulse})` }}
             >
               <FaMicrophone className={styles.micIcon} />
@@ -283,11 +351,17 @@ const Pitch: React.FC = () => {
             <div className={styles.timerDisplay}>
               Time Left: {formatTime(timeLeft)}
             </div>
-            <button className={styles.endPitchButton} onClick={handleEndPitch}>
-              <span>End Pitch</span>
+            <button
+              className={isQnaSection ? styles.endSessionButton : styles.endPitchButton}
+              onClick={handleEndPitch}
+            >
+              <span>{isQnaSection ? 'End session' : 'End Pitch'}</span>
             </button>
           </div>
-          <button className={styles.bottomLeftButton} onClick={handleSidebarOpen}>
+          <button
+            className={isQnaSection ? styles.bottomLeftButtonQna : styles.bottomLeftButton}
+            onClick={handleSidebarOpen}
+          >
             &gt;|
           </button>
         </>
