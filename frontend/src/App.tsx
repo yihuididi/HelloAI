@@ -2,6 +2,7 @@ import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import Pitch from './pages/Pitch';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 function AppRoutes() {
@@ -15,6 +16,7 @@ function AppRoutes() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/pitch' element={<Pitch />} />
       </Routes>
     </>
   );
