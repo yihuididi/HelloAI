@@ -58,6 +58,9 @@ const Pitch: React.FC = () => {
   // Add a new state for pitch complete popup
   const [showPitchComplete, setShowPitchComplete] = useState(false);
 
+  // Add interimTranscript state
+  const [interimTranscript, setInterimTranscript] = useState('');
+
   const handleOk = () => {
     setBlurOut(true);
     setTimeout(() => {
@@ -193,14 +196,14 @@ const Pitch: React.FC = () => {
     
     recognition.onresult = (event: any) => {
       let finalTranscript = '';
-      let interimTranscript = '';
+      let interimTranscriptLocal = '';
       
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
           finalTranscript += transcript + ' ';
         } else {
-          interimTranscript += transcript;
+          interimTranscriptLocal += transcript + ' ';
         }
       }
       
@@ -223,6 +226,7 @@ const Pitch: React.FC = () => {
         });
         setWordCounter(prev => prev + words.length);
       }
+      setInterimTranscript(interimTranscriptLocal.trim());
     };
     
     recognition.onerror = (event: any) => {
@@ -375,12 +379,14 @@ const Pitch: React.FC = () => {
             </button>
             <div className={styles.sidebarContent}>
               <h2 className={styles.transcriptTitle} style={{ textAlign: 'center', marginTop: 0, marginBottom: '2rem' }}>Transcript</h2>
-              <div className={styles.transcriptWordsRow}>
-                {transcript.trim()
-                  ? transcript.trim().split(/\s+/).reverse().map((word, i) => (
-                      <span key={i} className={styles.transcriptWordPill}>{word}</span>
-                    ))
-                  : <span className={styles.transcriptWordEmpty}>No words yet.</span>}
+              <div className={styles.transcriptTextBlock}>
+                {(() => {
+                  const finalWords = transcript.trim() ? transcript.trim().split(/\s+/) : [];
+                  const interimWords = interimTranscript.trim() ? interimTranscript.trim().split(/\s+/) : [];
+                  const allWords = [...finalWords, ...interimWords];
+                  if (!allWords.length) return <span className={styles.transcriptWordEmpty}>No words yet.</span>;
+                  return allWords.reverse().join(' ');
+                })()}
               </div>
             </div>
           </div>
