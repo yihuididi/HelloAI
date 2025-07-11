@@ -37,7 +37,6 @@ const Pitch: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
   const [timerActive, setTimerActive] = useState(false);
   const [micPulse, setMicPulse] = useState(1);
-  const [showTranscript, setShowTranscript] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
   const [transcript, setTranscript] = useState<string>('');
   const [isListening, setIsListening] = useState(false);
@@ -49,6 +48,7 @@ const Pitch: React.FC = () => {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleOk = () => {
     setBlurOut(true);
@@ -221,17 +221,19 @@ const Pitch: React.FC = () => {
     return word.substring(0, maxLength) + '...';
   };
 
-  const handleContinueToTranscript = () => {
+  const handleContinueAfterCongrats = () => {
     setShowCongrats(false);
-    setShowTranscript(true);
-    // Here you would typically send the transcript to your backend
-    console.log('Final transcript to send to backend:', transcript);
-    // Example: sendTranscriptToBackend(transcript);
+    setLoading(false);
+    setBlurOut(false);
+    setTimeLeft(INITIAL_TIME);
+    setRecentWords([]);
+    setWordCounter(0);
+    setTranscript('');
+    // Optionally reset other state as needed
   };
 
-  if (showTranscript) {
-    return <Transcript transcript={transcript} />;
-  }
+  const handleSidebarOpen = () => setSidebarOpen(true);
+  const handleSidebarClose = () => setSidebarOpen(false);
 
   if (showCongrats) {
     return (
@@ -239,7 +241,7 @@ const Pitch: React.FC = () => {
         <div className={styles.congratsPopup}>
           <h2 className={styles.congratsTitle}>Good Job on your pitch! 🎉</h2>
           <p className={styles.congratsMessage}>Let us analyse and review your results!</p>
-          <button className={styles.congratsButton} onClick={handleContinueToTranscript}>
+          <button className={styles.congratsButton} onClick={handleContinueAfterCongrats}>
             <span>Continue</span>
           </button>
         </div>
@@ -278,28 +280,6 @@ const Pitch: React.FC = () => {
             )}
           </div>
           <div className={styles.endPitchFixed}>
-            <div className={styles.recentWordsBox}>
-              <div className={styles.recentWordsTitle}>Recent Words</div>
-              <div className={styles.recentWordsContainer}>
-                {Array.from({ length: MAX_WORDS }, (_, index) => (
-                  <div key={`position-${index}`} className={styles.wordPosition}>
-                    {recentWords[index] && (
-                      <span 
-                        key={`${recentWords[index]}-${wordCounter}-${index}`} 
-                        className={styles.recentWord}
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                        title={recentWords[index]}
-                      >
-                        {truncateWord(recentWords[index])}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {recentWords.length === 0 && (
-                <div className={styles.noWordsMessage}>No words detected yet...</div>
-              )}
-            </div>
             <div className={styles.timerDisplay}>
               Time Left: {formatTime(timeLeft)}
             </div>
@@ -307,7 +287,30 @@ const Pitch: React.FC = () => {
               <span>End Pitch</span>
             </button>
           </div>
+          <button className={styles.bottomLeftButton} onClick={handleSidebarOpen}>
+            &gt;|
+          </button>
         </>
+      )}
+      {/* Sidebar overlay */}
+      {loading && (
+        <div className={styles.sidebarOverlay + (sidebarOpen ? ' ' + styles.sidebarOpen : '')} onClick={handleSidebarClose}>
+          <div className={styles.sidebar + (sidebarOpen ? ' ' + styles.sidebarOpen : '')} onClick={e => e.stopPropagation()}>
+            <button className={styles.sidebarCloseButton} onClick={handleSidebarClose}>
+              ×
+            </button>
+            <div className={styles.sidebarContent}>
+              <h2 className={styles.transcriptTitle} style={{ textAlign: 'center', marginTop: 0, marginBottom: '2rem' }}>Transcript</h2>
+              <div className={styles.transcriptWordsRow}>
+                {transcript.trim()
+                  ? transcript.trim().split(/\s+/).reverse().map((word, i) => (
+                      <span key={i} className={styles.transcriptWordPill}>{word}</span>
+                    ))
+                  : <span className={styles.transcriptWordEmpty}>No words yet.</span>}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

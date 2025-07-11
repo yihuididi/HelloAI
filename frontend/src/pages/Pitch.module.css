@@ -462,15 +462,42 @@
   justify-content: flex-start;
   min-height: 100vh;
   background-color: var(--color-gray-darker);
-  padding-top: 8vh;
+  padding-top: 3vh; /* Move content higher */
 }
 
 .transcriptTitle {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 2rem;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  margin-top: 2vh;
   letter-spacing: 0.04em;
+  position: relative;
+  background: linear-gradient(120deg, #e0e0e0 20%, #fff 40%, #bdbdbd 60%, #fff 80%, #e0e0e0 100%);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: spotlightMove 5s ease-in-out infinite alternate;
+}
+
+.transcriptTitle::after {
+  content: '';
+  display: block;
+  margin: 0.5rem auto 0 auto;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #fff 0%, #e0e0e0 50%, #fff 100%);
+}
+
+@keyframes spotlightMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
 }
 
 .transcriptContent {
@@ -691,4 +718,128 @@
   text-align: center;
   font-style: italic;
   margin-top: 0.5rem;
+} 
+
+.bottomLeftButton {
+  position: fixed;
+  left: 2.2rem;
+  bottom: 2.2rem;
+  z-index: 1100;
+  background: linear-gradient(90deg, var(--color-purple-neon), var(--color-blue-neon));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(64,0,128,0.10);
+  cursor: pointer;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.bottomLeftButton:hover {
+  box-shadow: 0 6px 24px rgba(65,209,255,0.18);
+  transform: translateY(-2px) scale(1.04);
+} 
+
+.sidebarOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.38);
+  z-index: 4000;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  transition: opacity 0.35s cubic-bezier(.4,1.6,.6,1), background 0.25s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebarOverlay.sidebarOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar {
+  width: 400px;
+  max-width: 98vw;
+  height: 100vh;
+  background: #18181b;
+  box-shadow: 2px 0 24px rgba(0,0,0,0.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(.4,1.6,.6,1);
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+}
+
+.sidebar.sidebarOpen {
+  transform: translateX(0);
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    width: 98vw;
+    max-width: 98vw;
+    height: 100vh;
+    padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+  }
+}
+
+.sidebarCloseButton {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.18s;
+}
+.sidebarCloseButton:hover {
+  color: #41d1ff;
+}
+
+.sidebarContent {
+  margin-top: 2.5rem;
+  color: #fff;
+} 
+
+.transcriptWordsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
+  margin-top: 1.2rem;
+  margin-bottom: 1.5rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 2.5rem;
+}
+
+.transcriptWordPill {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--color-purple-neon), var(--color-blue-neon));
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 600;
+  border-radius: 16px;
+  padding: 0.32rem 1.1rem;
+  box-shadow: 0 2px 8px rgba(64,0,128,0.08);
+  white-space: pre;
+  transition: background 0.18s, color 0.18s;
+  margin-bottom: 0.1rem;
+}
+
+.transcriptWordEmpty {
+  color: #aaa;
+  font-size: 1.05rem;
+  font-style: italic;
+  opacity: 0.7;
 } 

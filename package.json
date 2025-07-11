@@ -23,6 +23,7 @@
   "homepage": "https://github.com/yihuididi/HelloAI#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "chart.js": "^4.5.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
@@ -30,6 +31,7 @@
     "html2canvas": "^1.4.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
+    "react-chartjs-2": "^5.3.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
