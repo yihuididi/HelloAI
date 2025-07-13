@@ -1,5 +1,0 @@
-{
-  "watch": ["backend", "shared"],
-  "ext": "ts,json",
-  "exec": "node --loader ts-node/esm backend/index.ts"
-}

@@ -1,4 +1,4 @@
-import { User as IUser } from '../../shared/types/user.js';
+import { User as IUser } from '../../../shared/types/user.js';
 import User from '../models/user.model.js';
 import { AuthRequest } from '../types/authRequest.js';
 import { Request, Response } from 'express';

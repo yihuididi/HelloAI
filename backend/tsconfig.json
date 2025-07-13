@@ -10,11 +10,11 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["../shared/*"]
     },
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "..",
   },
-  "include": ["backend/**/*", "shared/**/*"],
-  "exclude": ["node_modules", "frontend"]
+  "include": ["src/**/*", "../shared/**/*"],
+  "exclude": ["node_modules", "../frontend"]
 }
