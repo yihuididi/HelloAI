@@ -22,11 +22,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/qna', qnaRoutes);
 app.use('/api/user', userRoutes);
 
-process.on('uncaughtException', (err) => {
-  console.log(err.name, err.message);
-  console.log('Uncaught Exception occured! Shutting down...');
-});
-
 app.listen(PORT, async () => {
   try {
     await connectDB();
