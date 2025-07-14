@@ -16,8 +16,7 @@
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^11.1.0",
     "mongoose": "^8.16.1",
-    "uuid": "^11.1.0",
-    "zod": "^3.25.67"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

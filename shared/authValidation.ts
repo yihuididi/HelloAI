@@ -4,7 +4,7 @@ const EMAIL_ERROR_MESSAGE = 'Invalid email address';
 
 export const registerSchema = z
   .object({
-    email: z.string().email({ message: EMAIL_ERROR_MESSAGE }),
+    email: z.email({ message: EMAIL_ERROR_MESSAGE }),
     username: z.string().min(1, 'Username is required'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
     passwordConfirmation: z.string()
@@ -14,6 +14,6 @@ export const registerSchema = z
   });
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: EMAIL_ERROR_MESSAGE }),
+  email: z.email({ message: EMAIL_ERROR_MESSAGE }),
   password: z.string().min(1, 'Password is required')
 });
