@@ -1,0 +1,20 @@
+.placeholder {
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--navbar-height));
+}
+
+.sidebar {
+    position: absolute;
+    z-index: 10;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--navbar-height));
+    padding: 1rem .7rem;
+    border-right: 1px solid var(--color-gray);
+    transition: width 0.3s ease;
+    background-color: var(--color-gray-darker);
+    overflow-x: hidden;
+}
+
+.sidebar:hover {
+    width: 240px;
+}

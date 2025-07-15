@@ -1,0 +1,34 @@
+.sidebarItem {
+    transition: background-color 0.2s;
+    border-radius: 8px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+
+.sidebarItem:hover, .sidebarItem.selected {
+    background-color: var(--color-blue-darkest);
+}
+
+.iconWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--sidebar-width) - 1.4rem);
+
+    * {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.tooltip {
+    font-weight: 500;
+    color: var(--color-gray-light);
+    width: 100%;
+    position: absolute;
+    left: var(--sidebar-width);
+    padding: 0 1rem;
+}

@@ -1,4 +1,5 @@
 {
+  "name": "helloai-shared",
   "type": "module",
   "dependencies": {
     "zod": "^4.0.5"

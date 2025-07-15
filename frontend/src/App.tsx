@@ -1,8 +1,9 @@
 import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
+import Recordings from './pages/Recordings/Recordings';
 import Register from './pages/Register/Register';
-import Result from './pages/Result/Result';
+import Results from './pages/Results/Results';
 import Pitch from './pages/Pitch';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
@@ -18,7 +19,8 @@ function AppRoutes() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/pitch' element={<Pitch />} />
-        <Route path='/result' element={<Result />} />
+        <Route path='/recordings' element={<Recordings />} />
+        <Route path='/recordings/:recording_id' element={<Results />} />
       </Routes>
     </>
   );
