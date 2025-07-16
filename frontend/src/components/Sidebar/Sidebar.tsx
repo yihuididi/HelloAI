@@ -1,8 +1,8 @@
 import styles from './Sidebar.module.css';
 import SidebarItem from './SidebarItem/SidebarItem';
-import { HiOutlineBookOpen, HiOutlineGlobeAlt } from "react-icons/hi"
-import { LuAudioWaveform } from "react-icons/lu";
-import { PiMicrophoneStageBold, PiWavesBold } from "react-icons/pi";
+import { HiOutlineBookOpen, HiOutlineGlobeAlt } from 'react-icons/hi'
+import { LuAudioWaveform } from 'react-icons/lu';
+import { PiMicrophoneStageBold, PiWavesBold } from 'react-icons/pi';
 
 interface Props {
   assessment: string | null;

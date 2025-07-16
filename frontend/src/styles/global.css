@@ -32,8 +32,11 @@
     --color-red: #ef4444;
     --color-red-neon: #f81c1f;
     --color-orange: #f97316;
+    --color-orange-neon: #ff5e00;
     --color-yellow: #eab308;
+    --color-yellow-neon: #ffff33;
     --color-green: #22c55e;
+    --color-green-neon: #63f34a;
 
     --navbar-height: 64px;
     --sidebar-width: 64px;
