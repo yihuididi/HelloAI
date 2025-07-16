@@ -1,11 +1,11 @@
 import styles from './Sidebar.module.css';
 import SidebarItem from './SidebarItem/SidebarItem';
-import { HiOutlineBookOpen } from "react-icons/hi"
+import { HiOutlineBookOpen, HiOutlineGlobeAlt } from "react-icons/hi"
 import { LuAudioWaveform } from "react-icons/lu";
 import { PiMicrophoneStageBold, PiWavesBold } from "react-icons/pi";
 
 interface Props {
-  assessment: 'content' | 'pronunciation' | 'intonation' | 'fluency';
+  assessment: string | null;
 }
 
 function Sidebar({ assessment }: Props) {
@@ -13,6 +13,11 @@ function Sidebar({ assessment }: Props) {
     <>
       <div className={styles.placeholder} />
       <div className={styles.sidebar}>
+        <SidebarItem
+          assessment='overview'
+          icon={<HiOutlineGlobeAlt />}
+          selected={assessment === 'overview'}
+        />
         <SidebarItem
           assessment='content'
           icon={<HiOutlineBookOpen />}

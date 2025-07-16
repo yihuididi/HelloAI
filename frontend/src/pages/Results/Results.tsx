@@ -13,7 +13,7 @@ function Results() {
   // Set search params assessment=content by default
   useEffect(() => {
     if (!searchParams.has('assessment')) {
-      searchParams.set('assessment', 'content');
+      searchParams.set('assessment', 'overview');
       navigate({
         pathname: location.pathname,
         search: searchParams.toString(),
@@ -24,7 +24,9 @@ function Results() {
   return (
     <div className={styles.layout}>
       <Sidebar assessment={assessment} />
-      test
+      <div className={styles.content}>
+        test
+      </div>
     </div>
   );
 }

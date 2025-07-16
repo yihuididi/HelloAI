@@ -32,3 +32,17 @@
     left: var(--sidebar-width);
     padding: 0 1rem;
 }
+
+@media (max-width: 768px) {
+    .sidebarItem {
+        height: 100%;
+        margin-bottom: 0;
+        justify-content: center;
+        transition: color 0.2s;
+    }
+
+    .sidebarItem:hover, .sidebarItem.selected {
+        color: var(--color-blue);
+        background-color: inherit;
+    }
+}

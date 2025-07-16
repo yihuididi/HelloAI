@@ -1,4 +1,4 @@
-.placeholder {
+.placeholder, .sidebar {
     width: var(--sidebar-width);
     height: calc(100vh - var(--navbar-height));
 }
@@ -6,8 +6,6 @@
 .sidebar {
     position: absolute;
     z-index: 10;
-    width: var(--sidebar-width);
-    height: calc(100vh - var(--navbar-height));
     padding: 1rem .7rem;
     border-right: 1px solid var(--color-gray);
     transition: width 0.3s ease;
@@ -17,4 +15,25 @@
 
 .sidebar:hover {
     width: 240px;
+}
+
+@media (max-width: 768px) {
+    .placeholder, .sidebar {
+        height: var(--sidebar-width);
+        width: 100vw;
+    }
+
+    .sidebar {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        padding: .7rem 1rem;
+        transition: none;
+        border-top: 1px solid var(--color-gray);
+        border-right: none;
+    }
+
+    .sidebar:hover {
+        width: 100vw;
+    }
 }
