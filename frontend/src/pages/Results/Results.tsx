@@ -20,14 +20,20 @@ function Results() {
   const assessment = searchParams.get('assessment');
   const { recording_id } = useParams();
 
-  // Set search params assessment=content by default
   useEffect(() => {
+    // Set search params assessment=content by default
     if (!searchParams.has('assessment')) {
       searchParams.set('assessment', 'overview');
       navigate({
         pathname: location.pathname,
         search: searchParams.toString(),
       }, { replace: true });
+    }
+
+    // Validate search params
+    const validAssessments = ['overview', 'content', 'pronunciation', 'intonation', 'fluency'];
+    if (assessment && !validAssessments.includes(assessment)) {
+      navigate('/404', { replace: true });
     }
   }, [location, navigate]);
 

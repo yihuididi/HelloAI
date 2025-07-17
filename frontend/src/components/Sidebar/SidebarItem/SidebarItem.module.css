@@ -16,7 +16,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(var(--sidebar-width) - 1.4rem);
+    width: calc(var(--sidebar-width) - 1.5rem);
 
     * {
         width: 20px;
