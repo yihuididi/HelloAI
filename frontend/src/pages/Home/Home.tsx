@@ -1,6 +1,6 @@
-import Features from '../../components/Features/Features';
-import Intro from '../../components/Intro/Intro';
+import Features from './Features/Features';
 import styles from './Home.module.css';
+import Intro from './Intro/Intro';
 
 function Home() {
   return (

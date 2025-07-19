@@ -1,10 +1,10 @@
-import Sidebar from '../../components/Sidebar/Sidebar';
 import Content from './Content/Content';
 import Fluency from './Fluency/Fluency';
 import Intonation from './Intonation/Intonation';
 import Overview from './Overview/Overview';
 import Pronunciation from './Pronunciation/Pronunciation';
 import styles from './Results.module.css';
+import Sidebar from './Sidebar/Sidebar';
 import { useEffect } from 'react';
 import { RxCaretLeft } from 'react-icons/rx';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';

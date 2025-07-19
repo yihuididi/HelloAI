@@ -1,7 +1,7 @@
 import CircularProgressBar from '../../../components/CircularProgressBar/CircularProgressBar';
 import useIsMobile from '../../../hooks/useIsMobile';
-import Transcript from '../../../layouts/Transcript/Transcript';
-import styles from './Overview.module.css';
+import styles from '../Layout.module.css';
+import Transcript from '../Transcript/Transcript';
 
 function Overview() {
   const isMobile = useIsMobile();

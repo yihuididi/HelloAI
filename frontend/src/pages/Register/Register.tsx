@@ -1,7 +1,7 @@
 import { registerSchema } from '../../../../shared/authValidation';
 import styles from '../../components/AuthForm/AuthForm.module.css';
+import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import Loader from '../../components/Loader/Loader';
-import AuthLayout from '../../layouts/AuthLayout/AuthLayout';
 import { register } from '../../services/auth';
 import { useState } from 'react';
 import { Link, useNavigate} from 'react-router-dom';

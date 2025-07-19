@@ -1,4 +1,4 @@
-import useIsMobile from '../../../hooks/useIsMobile';
+import useIsMobile from '../../../../hooks/useIsMobile';
 import styles from './SidebarItem.module.css';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
