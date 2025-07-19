@@ -46,7 +46,7 @@ function Login() {
     }
 
     try {
-      await login(form.email, form.password);
+      await login(form.email.trim(), form.password);
       setErrors({ email: '', password: '', backend: '' });
       navigate('/');
     } catch (err: any) {

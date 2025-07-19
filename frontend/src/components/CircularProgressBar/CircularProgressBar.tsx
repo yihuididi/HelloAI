@@ -1,4 +1,4 @@
-import styles from './CircularProgressbar.module.css';
+import styles from './CircularProgressBar.module.css';
 import { useEffect, useRef } from 'react';
 
 interface Props {

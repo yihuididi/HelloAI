@@ -56,7 +56,7 @@ function Register() {
     }
 
     try {
-      await register(form.email, form.username, form.password, form.passwordConfirmation);
+      await register(form.email.trim(), form.username.trim(), form.password, form.passwordConfirmation);
       setErrors({ email: '', username: '', password: '', passwordConfirmation: '', backend: '' });
       navigate('/');
     } catch (err: any) {
