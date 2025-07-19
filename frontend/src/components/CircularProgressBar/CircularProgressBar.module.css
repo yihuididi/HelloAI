@@ -20,7 +20,7 @@
     position: absolute;
     inset: var(--thickness);
     border-radius: 50%;
-    background: var(--color-gray-darker);
+    background: var(--color-gray-darkest);
 }
 
 .text {

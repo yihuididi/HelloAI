@@ -1,9 +1,9 @@
-import Content from '../../components/Content/Content';
-import Fluency from '../../components/Fluency/Fluency';
-import Intonation from '../../components/Intonation/Intonation';
-import Overview from '../../components/Overview/Overview';
-import Pronunciation from '../../components/Pronunciation/Pronunciation';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import Content from './Content/Content';
+import Fluency from './Fluency/Fluency';
+import Intonation from './Intonation/Intonation';
+import Overview from './Overview/Overview';
+import Pronunciation from './Pronunciation/Pronunciation';
 import styles from './Results.module.css';
 import { useEffect } from 'react';
 import { RxCaretLeft } from 'react-icons/rx';

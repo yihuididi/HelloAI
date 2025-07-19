@@ -9,7 +9,7 @@
     background-color: var(--color-gray-lightest);
     border-radius: 9999px;
     padding: 0 0.75rem;
-    color: var(--color-gray-darker);
+    color: var(--color-gray-darkest);
     cursor: pointer;
     overflow: hidden;
     white-space: nowrap;
@@ -44,7 +44,7 @@
     right: 0;
     top: calc(var(--navbar-height) / 2 + 20px);
     border-radius: 12px;
-    box-shadow: 0 0 5px var(--color-gray-darker);
+    box-shadow: 0 0 5px var(--color-gray-darkest);
     max-height: calc(100vh - var(--navbar-height));
     overflow-y: auto;
     visibility: visible;

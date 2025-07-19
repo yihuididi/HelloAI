@@ -1,0 +1,82 @@
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.jump {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color .3s;
+    padding: .5rem;
+    color: var(--color-gray);
+
+    * {
+        width: 21px;
+        height: 21px;
+    }
+}
+
+.jump:hover {
+    color: var(--color-purple-darker);
+}
+
+.play {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(var(--color-purple-light), var(--color-purple-darker));
+    width: 70px;
+    height: 35px;
+    border-radius: 5px;
+    transition: color .3s;
+
+    * {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.play:hover {
+    color: var(--color-purple-darkest);
+}
+
+.slider {
+    width: 100%;
+    appearance: none;
+    height: 4px;
+    background: linear-gradient(
+        to right,
+        var(--color-purple-darker) var(--progress),
+        var(--color-purple-lighter) var(--progress)
+    );
+    outline: none;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+    border: none;
+}
+
+.slider::-moz-range-thumb {
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+}
+
+.time {
+    text-align: center;
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--color-gray);
+    cursor: default;
+}

@@ -1,0 +1,15 @@
+.score {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    margin-top: 1.6rem;
+    padding: .7rem;
+}
+
+.heading {
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin-bottom: 1.3rem;
+}
