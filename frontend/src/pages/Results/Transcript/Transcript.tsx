@@ -11,9 +11,6 @@ function Transcript({ children }: Props) {
     <div className={styles.container}>
       <AudioPlayer />
       <div className={styles.transcript}>
-        <div className={styles.header}>
-          Transcript
-        </div>
         {children}
       </div>
     </div>
