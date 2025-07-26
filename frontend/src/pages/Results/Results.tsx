@@ -5,7 +5,7 @@ import Overview from './Overview/Overview';
 import Pronunciation from './Pronunciation/Pronunciation';
 import styles from './Results.module.css';
 import Sidebar from './Sidebar/Sidebar';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { RxCaretLeft } from 'react-icons/rx';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ function capitalize(str: string | null): string {
 }
 
 function Results() {
+  const contentRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -40,7 +41,7 @@ function Results() {
   return (
     <div className={styles.layout}>
       <Sidebar assessment={assessment} />
-      <div className={styles.contentWrapper}>
+      <div ref={contentRef} className={styles.contentWrapper}>
         <div className={styles.content}>
           <Link to='/recordings' className={styles.back}>
               <RxCaretLeft className={styles.icon} />
@@ -49,7 +50,7 @@ function Results() {
           <div className={styles.heading}>{capitalize(assessment)}</div>
           {assessment === 'overview' ? <Overview />
             : assessment === 'content' ? <Content />
-            : assessment === 'pronunciation' ? <Pronunciation />
+            : assessment === 'pronunciation' ? <Pronunciation containerRef={contentRef} />
             : assessment === 'intonation' ? <Intonation />
             : assessment === 'fluency' ? <Fluency />
             : <></>

@@ -1,46 +1,67 @@
 import styles from './CircularProgressBar.module.css';
 import { useEffect, useRef } from 'react';
 
+type Description = 'Beginner' | 'Elementary' | 'Intermediate' | 'Advanced' | 'Fluent';
+
 interface Props {
   value: number;
-  color: string;
-  description: string;
+  description: Description;
   fontSize?: string;
   diameter?: string;
   thickness?: string;
   fontColor?: string;
+  animation?: boolean;
+}
+
+function getColor(description: Description): string {
+  switch (description) {
+    case 'Beginner':
+      return '#ef4444';
+    case 'Elementary':
+      return '#f97316';
+    case 'Intermediate':
+      return '#eab308';
+    case 'Advanced':
+      return '#22c55e';
+    case 'Fluent':
+      return '#22bac5';
+    default:
+      return '';
+  }
 }
 
 function CircularProgressBar({
   value,
-  color,
   description,
   fontSize = '1rem',
   diameter = '130px',
   thickness = '8px',
-  fontColor = 'inherit'
+  fontColor = 'inherit',
+  animation = true
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
     // Animate progress meter
     useEffect(() => {
-      const duration = 300;
-      const el = ref.current;
-      if (!el) return;
+      if (animation) {
+        const duration = 300;
+        const el = ref.current;
+        if (!el) return;
 
-      let start: number | null = null;
+        let start: number | null = null;
 
-      const animate = (timestamp: number) => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const currentValue = Math.round(progress * value);
+        const animate = (timestamp: number) => {
+          if (!start) start = timestamp;
+          const progress = Math.min((timestamp - start) / duration, 1);
+          const currentValue = Math.round(progress * value);
 
-        el.style.setProperty('--i', currentValue.toString());
-        if (progress < 1) requestAnimationFrame(animate);
-      };
+          el.style.setProperty('--i', currentValue.toString());
+          if (progress < 1) requestAnimationFrame(animate);
+        };
 
-      requestAnimationFrame(animate);
-    }, [value]);
+        requestAnimationFrame(animate);
+      }
+    }, [value, animation]);
 
   return (
     <div
@@ -48,7 +69,7 @@ function CircularProgressBar({
       ref={ref}
       style={{
         '--i': value,
-        '--clr': color,
+        '--clr': getColor(description),
         '--diam': diameter,
         '--thickness': thickness
       } as React.CSSProperties }
