@@ -1,6 +1,6 @@
 import CircularProgressBar from '../../../components/CircularProgressBar/CircularProgressBar';
 import HorizontalProgressBar from '../../../components/HorizontalProgressBar/HorizontalProgressBar';
-import useAdjustContainerPosition from '../../../hooks/useAdjustTooltipPosition';
+import useAdjustTooltipPosition from '../../../hooks/useAdjustTooltipPosition';
 import useIsMobile from '../../../hooks/useIsMobile';
 import lstyles from '../Layout.module.css';
 import PopOver from '../PopOver/PopOver';
@@ -768,15 +768,15 @@ function Pronunciation({ containerRef }: Props) {
   const isMobile = useIsMobile();
   const targetRef = useRef<HTMLButtonElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const position = useAdjustContainerPosition({
+  const position = useAdjustTooltipPosition({
     containerRef: containerRef,
     targetRef: targetRef,
     tooltipRef: tooltipRef,
-    deps: [activeIndex],
+    deps: [activeIndex]
   });
 
   return (
-    <div>
+    <>
       <div className={`${lstyles.container} ${lstyles.score}`}>
         <CircularProgressBar
           value={data.score}
@@ -859,7 +859,7 @@ function Pronunciation({ containerRef }: Props) {
           </div>
         </PopOver>
       )}
-    </div>
+    </>
   );
 }
 

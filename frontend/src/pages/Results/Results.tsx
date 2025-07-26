@@ -51,7 +51,7 @@ function Results() {
           {assessment === 'overview' ? <Overview />
             : assessment === 'content' ? <Content />
             : assessment === 'pronunciation' ? <Pronunciation containerRef={contentRef} />
-            : assessment === 'intonation' ? <Intonation />
+            : assessment === 'intonation' ? <Intonation containerRef={contentRef} />
             : assessment === 'fluency' ? <Fluency />
             : <></>
           }
