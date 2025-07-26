@@ -47,13 +47,22 @@ function AudioPlayer({ jumpTime = 5 }: Props) {
       setProgress(audio.currentTime);
     };
 
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', () => {
+    const handleLoadedMetadata = () => {
       setDuration(audio.duration);
-    });
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+    };
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('ended', handleEnded);
     };
   }, []);
 
