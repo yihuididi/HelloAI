@@ -1,10 +1,13 @@
 import CircularProgressBar from '../../../components/CircularProgressBar/CircularProgressBar';
+import ProgressBar from '../../../components/ProgressBar/ProgressBar';
+import Speedometer from '../../../components/Speedometer/Speedometer';
 import useAdjustTooltipPosition from '../../../hooks/useAdjustTooltipPosition';
 import useIsMobile from '../../../hooks/useIsMobile';
 import lstyles from '../Layout.module.css';
 import PopOver from '../PopOver/PopOver';
 import Transcript from '../Transcript/Transcript';
 import tstyles from '../Transcript/Transcript.module.css';
+import { getBlueColor, getTrafficLightColor } from '../utils';
 import styles from './Fluency.module.css';
 import React, { useRef, useState } from 'react';
 import { RxStretchHorizontally } from 'react-icons/rx';
@@ -13,6 +16,9 @@ const data = {
   score: 95,
   title: 'Fluent',
   description: 'Excellent fluency! You speak smoothly and naturally, with few interruptions or hesitations. Maintain this level with regular speaking practice.',
+  wpm: 174,
+  speedLabel: 'Natural',
+  pauseScore: 85,
   transcript: [
     { text: 'Lorem ', classification: 'normal' },
     { text: 'ipsum ', classification: 'normal' },
@@ -361,13 +367,52 @@ function Fluency({ containerRef }: Props) {
       <div className={`${lstyles.container} ${lstyles.score}`}>
         <CircularProgressBar
           value={data.score}
-          description={data.title as 'Fluent'}
+          color={getTrafficLightColor(data.score)}
+          description={data.title}
           diameter={isMobile ? '150px' : '200px'}
           thickness={isMobile ? '8px' : '11px'}
           fontSize={isMobile ? '1rem' : '1.25rem'}
         />
         <h3>Your fluency is <strong>{data.title}</strong>.</h3>
         <h4>{data.description}</h4>
+      </div>
+
+      <div className={`${lstyles.container} ${styles.charts}`}>
+        <div className={styles.metric}>
+          <div className={styles.chartWrapper}>
+            <Speedometer
+              value={data.wpm}
+              description={data.speedLabel}
+              unit='wpm'
+            />
+          </div>
+          <div>
+            <h2>Pace</h2>
+            <div>
+              Pace refers to how fast or slow you speak. Aim to maintain a speaking rate between 120 to 180 words per minute, 
+              fast enough to keep attention, but slow enough for clarity.
+            </div>
+          </div>
+        </div>
+        <div className={styles.metric}>
+          <div className={styles.chartWrapper}>
+            <ProgressBar
+              value={data.pauseScore}
+              length='100%'
+              color={getBlueColor(data.pauseScore)}
+              fontColor='var(--color-gray-light)'
+              thickness='10px'
+              orientation='vertical'
+            />
+          </div>
+          <div>
+            <h2>Pause Score</h2>
+            <div>
+              Pauses give your audience time to process what you've said and emphasize key points.
+              Use short, deliberate pauses between ideas or after important statements to create impact.
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className={lstyles.container}>
@@ -390,6 +435,7 @@ function Fluency({ containerRef }: Props) {
                     onClick={() => selectActiveIndex(i)}
                     ref={activeIndex === i ? targetRef : null}
                   >
+                    {word.text}
                   </button>
                 ) : word.classification === 'good pause' ? (
                   <button

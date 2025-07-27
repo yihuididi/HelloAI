@@ -1,11 +1,12 @@
 import CircularProgressBar from '../../../components/CircularProgressBar/CircularProgressBar';
-import HorizontalProgressBar from '../../../components/HorizontalProgressBar/HorizontalProgressBar';
+import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import useAdjustTooltipPosition from '../../../hooks/useAdjustTooltipPosition';
 import useIsMobile from '../../../hooks/useIsMobile';
 import lstyles from '../Layout.module.css';
 import PopOver from '../PopOver/PopOver';
 import Transcript from '../Transcript/Transcript';
 import tstyles from '../Transcript/Transcript.module.css';
+import { getTrafficLightColor } from '../utils';
 import styles from './Pronunciation.module.css';
 import React, { useRef, useState } from 'react';
 
@@ -780,7 +781,8 @@ function Pronunciation({ containerRef }: Props) {
       <div className={`${lstyles.container} ${lstyles.score}`}>
         <CircularProgressBar
           value={data.score}
-          description={data.title as 'Advanced'}
+          color={getTrafficLightColor(data.score)}
+          description={data.title}
           diameter={isMobile ? '150px' : '200px'}
           thickness={isMobile ? '8px' : '11px'}
           fontSize={isMobile ? '1rem' : '1.25rem'}
@@ -830,8 +832,10 @@ function Pronunciation({ containerRef }: Props) {
             </div>
           </div>
           <div className={styles.progressContainer}>
-            <HorizontalProgressBar
-              score={activeWord.score}
+            <ProgressBar
+              value={activeWord.score}
+              length='100%'
+              color={getTrafficLightColor(activeWord.score)}
               fontColor='var(--color-gray-dark)'
               animation={!isMobile}
             />

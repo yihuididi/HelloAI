@@ -1,11 +1,10 @@
 import styles from './CircularProgressBar.module.css';
 import { useEffect, useRef } from 'react';
 
-type Description = 'Beginner' | 'Elementary' | 'Intermediate' | 'Advanced' | 'Fluent';
-
 interface Props {
   value: number;
-  description: Description;
+  description: string;
+  color?: string;
   fontSize?: string;
   diameter?: string;
   thickness?: string;
@@ -13,26 +12,10 @@ interface Props {
   animation?: boolean;
 }
 
-function getColor(description: Description): string {
-  switch (description) {
-    case 'Beginner':
-      return '#ef4444';
-    case 'Elementary':
-      return '#f97316';
-    case 'Intermediate':
-      return '#eab308';
-    case 'Advanced':
-      return '#22c55e';
-    case 'Fluent':
-      return '#22bac5';
-    default:
-      return '';
-  }
-}
-
 function CircularProgressBar({
   value,
   description,
+  color = 'var(--color-green)',
   fontSize = '1rem',
   diameter = '130px',
   thickness = '8px',
@@ -69,7 +52,7 @@ function CircularProgressBar({
       ref={ref}
       style={{
         '--i': value,
-        '--clr': getColor(description),
+        '--clr': color,
         '--diam': diameter,
         '--thickness': thickness
       } as React.CSSProperties }

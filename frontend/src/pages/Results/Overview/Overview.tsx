@@ -3,6 +3,7 @@ import useIsMobile from '../../../hooks/useIsMobile';
 import styles from '../Layout.module.css';
 import Transcript from '../Transcript/Transcript';
 import tstyles from '../Transcript/Transcript.module.css';
+import { getTrafficLightColor } from '../utils';
 
 const data = {
   score: 15,
@@ -21,7 +22,8 @@ function Overview() {
       <div className={`${styles.container} ${styles.score}`}>
         <CircularProgressBar
           value={data.score}
-          description={data.title as 'Beginner'}
+          color={getTrafficLightColor(data.score)}
+          description={data.title}
           diameter={isMobile ? '150px' : '200px'}
           thickness={isMobile ? '8px' : '11px'}
           fontSize={isMobile ? '1rem' : '1.25rem'}

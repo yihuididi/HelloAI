@@ -5,6 +5,7 @@ import lstyles from '../Layout.module.css';
 import PopOver from '../PopOver/PopOver';
 import Transcript from '../Transcript/Transcript';
 import tstyles from '../Transcript/Transcript.module.css';
+import { getTrafficLightColor } from '../utils';
 import styles from './Intonation.module.css';
 import React, { useRef, useState } from 'react';
 
@@ -360,7 +361,8 @@ function Intonation({ containerRef }: Props) {
       <div className={`${lstyles.container} ${lstyles.score}`}>
         <CircularProgressBar
           value={data.score}
-          description={data.title as 'Elementary'}
+          color={getTrafficLightColor(data.score)}
+          description={data.title}
           diameter={isMobile ? '150px' : '200px'}
           thickness={isMobile ? '8px' : '11px'}
           fontSize={isMobile ? '1rem' : '1.25rem'}

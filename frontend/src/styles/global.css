@@ -24,9 +24,9 @@
     --color-blue-light: #60a5fa;
     --color-blue-lighter: #93c5fd;
     --color-blue-lightest: #bfdbfe;
-    --color-blue-dark: #2563eb;
-    --color-blue-darker: #1d4ed8;
-    --color-blue-darkest: #193591;
+    --color-blue-dark: #255cd1;
+    --color-blue-darker: #1c43ad;
+    --color-blue-darkest: #1a295c;
     --color-blue-neon: #41d1ff;
 
     --color-red: #ef4444;
@@ -37,7 +37,7 @@
     --color-yellow-neon: #ffff33;
     --color-green: #22c55e;
     --color-green-neon: #63f34a;
-    --color-teal: #22bac5;
+    --color-teal: #33b8c2;
 
     --navbar-height: 64px;
     --sidebar-width: 64px;
