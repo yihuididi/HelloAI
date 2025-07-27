@@ -52,7 +52,7 @@ function Results() {
             : assessment === 'content' ? <Content />
             : assessment === 'pronunciation' ? <Pronunciation containerRef={contentRef} />
             : assessment === 'intonation' ? <Intonation containerRef={contentRef} />
-            : assessment === 'fluency' ? <Fluency />
+            : assessment === 'fluency' ? <Fluency containerRef={contentRef} />
             : <></>
           }
         </div>

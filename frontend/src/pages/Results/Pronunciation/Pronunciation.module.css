@@ -9,6 +9,10 @@
     color: var(--color-purple);
 }
 
+.phonemes {
+    color: var(--color-gray);
+}
+
 .progressContainer {
     margin: 1rem 0;
     padding: .2rem 1rem .2rem .8rem;
