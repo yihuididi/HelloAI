@@ -27,7 +27,7 @@ function ProgressBar({
 
   // Animate progress bar
   useEffect(() => {
-    setWidth(`${value}%`);
+    setTimeout(() => setWidth(`${value}%`), 1);
   }, [value]);
 
   return (

@@ -386,7 +386,7 @@ function Fluency({ containerRef }: Props) {
               unit='wpm'
             />
           </div>
-          <div>
+          <div className={styles.description}>
             <h2>Pace</h2>
             <div>
               Pace refers to how fast or slow you speak. Aim to maintain a speaking rate between 120 to 180 words per minute, 
@@ -405,7 +405,7 @@ function Fluency({ containerRef }: Props) {
               orientation='vertical'
             />
           </div>
-          <div>
+          <div className={styles.description}>
             <h2>Pause Score</h2>
             <div>
               Pauses give your audience time to process what you've said and emphasize key points.

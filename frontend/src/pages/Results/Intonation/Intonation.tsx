@@ -8,11 +8,37 @@ import tstyles from '../Transcript/Transcript.module.css';
 import { getTrafficLightColor } from '../utils';
 import styles from './Intonation.module.css';
 import React, { useRef, useState } from 'react';
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ReferenceArea,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import type { DotProps } from 'recharts';
+
+interface CustomDotProps extends DotProps {
+  index: number;
+  payload: {
+    pitch: number;
+  };
+}
 
 const data = {
   score: 49,
   title: 'Elementary',
   description: 'Focus on word stress and sentence rhythm. Practice emphasizing nouns, verbs, and adjectives in your speech to sound clearer and more natural.',
+  pitch: [
+    { time: 0, pitch: 45 },
+    { time: 10, pitch: 60 },
+    { time: 20, pitch: 48 },
+    { time: 30, pitch: 42 },
+    { time: 40, pitch: 50 },
+    { time: 50, pitch: 52 }
+  ],
   transcript: [
     { text: 'Lorem ', expected: true, actual: true },
     { text: 'ipsum ', expected: false, actual: false },
@@ -335,6 +361,25 @@ const data = {
   ]
 };
 
+const MIN_PITCH = 50;
+const MAX_PITCH = 150;
+
+const renderCustomDot = (props: CustomDotProps) => {
+  const { cx, cy, index, payload } = props;
+  const isOutOfRange = payload.pitch < MIN_PITCH || payload.pitch > MAX_PITCH;
+  return (
+    <circle
+      cx={cx}
+      cy={cy}
+      r={6}
+      fill={isOutOfRange ? 'var(--color-red)' : 'var(--color-blue-lighter'}
+      stroke='var(--color-blue'
+      strokeWidth={2}
+      key={index}
+    />
+  );
+};
+
 interface Props {
   containerRef: React.RefObject<HTMLDivElement | null>
 }
@@ -369,6 +414,43 @@ function Intonation({ containerRef }: Props) {
         />
         <h3>Your intonation is <strong>{data.title}</strong>.</h3>
         <h4>{data.description}</h4>
+      </div>
+
+      <div className={lstyles.container}>
+        <h2>Pitch</h2>
+        <div className={styles.charts}>
+          <ResponsiveContainer>
+            <LineChart data={data.pitch} margin={{ left: 20, bottom: 20 }}>
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis
+                dataKey='time'
+                tickFormatter={(t) => `${t}s`}
+                label={{ value: 'Timestamp', position: 'insideBottom', offset: -10 }}
+              />
+              <YAxis
+                domain={[0, 300]}
+                tickFormatter={(t) => `${t}Hz`}
+                label={{ value: 'Pitch (Hz)', angle: -90, position: 'insideLeft', dx: -10 }}
+              />
+              <Tooltip formatter={(v: any) => `${v}Hz`} labelFormatter={(l) => `${l}s`} />
+              <ReferenceArea
+                y1={MIN_PITCH}
+                y2={MAX_PITCH}
+                strokeOpacity={0}
+                fill='var(--color-blue)'
+                fillOpacity={0.4}
+              />
+              <Line
+                type='monotone'
+                dataKey='pitch'
+                stroke='var(--color-blue)'
+                strokeWidth={2}
+                dot={renderCustomDot}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div className={styles.center}>For best clarity, ensure your pitch falls within the 50 to 150 Hz range, typical for confident and natural speech.</div>
       </div>
 
       <div className={lstyles.container}>

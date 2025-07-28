@@ -68,7 +68,7 @@ function Content() {
         >
           <PolarGrid />
           <PolarAngleAxis
-            dataKey="metric"
+            dataKey='metric'
             tick={{ fontSize: isMobile ? '.7rem' : '1rem' }}
           />
           <PolarRadiusAxis
@@ -77,10 +77,10 @@ function Content() {
             tick={{ fontSize: isMobile ? '.6rem' : '.9rem' }}
           />
           <Radar
-            name="Score"
-            dataKey="score"
-            stroke="#3b82f6"
-            fill="#3b82f6"
+            name='Score'
+            dataKey='score'
+            stroke='var(--color-blue)'
+            fill='var(--color-blue)'
             fillOpacity={0.6}
           />
           <Tooltip />

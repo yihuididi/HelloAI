@@ -33,7 +33,7 @@ function Speedometer({
 
   // Animate needle
   useEffect(() => {
-    setAngle(`${getNeedleAngle(value)}deg`);
+    setTimeout(() => setAngle(`${getNeedleAngle(value)}deg`), 1);
   }, [value]);
 
   return (
