@@ -1,4 +1,14 @@
 {
   "private": true,
-  "workspaces": ["frontend", "backend", "shared"]
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\" \"cd python_service && uvicorn app.main:app --reload --port 5000\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
 }

@@ -138,3 +138,7 @@ export const createRecording = async (req: Request, res: Response): Promise<any>
     res.status(500).json({ error: 'Error creating recording' });
   }
 };
+
+export const transcribePitch = async (req: Request, res: Response): Promise<any> => {
+
+}
