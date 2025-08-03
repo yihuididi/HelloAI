@@ -1,5 +1,6 @@
 import { loginSchema, registerSchema } from '../../../shared/authValidation.js'
 import { User as IUser } from '../../../shared/types/user.js';
+import { config } from '../config/config.js';
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
@@ -24,7 +25,8 @@ export const register = async (req: Request, res: Response): Promise<any> => {
 
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    console.error('Error registering user:', err);
+    res.status(500).json({ error: 'Error registering user' });
   }
 };
 
@@ -43,7 +45,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET as string,
+      config.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
@@ -56,14 +58,15 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     res
       .cookie('AUTH_TOKEN', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: config.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
       })
       .status(200)
       .json(userData);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err});
+    console.error('Error authenticating user:', err);
+    res.status(500).json({ error: 'Error authenticating user' });
   }
 };
 
@@ -71,7 +74,7 @@ export const logout = (req: Request, res: Response): void => {
   res
     .clearCookie('AUTH_TOKEN', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: config.NODE_ENV === 'production',
       sameSite: 'lax'
     })
     .status(200)
@@ -85,7 +88,7 @@ export const checkAuth = async (req: Request, res: Response): Promise<any> => {
       return res.status(200).json({ authenticated: false });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
+    const decoded = jwt.verify(token, config.JWT_SECRET) as { userId: string };
     const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(200).json({ authenticated: false });

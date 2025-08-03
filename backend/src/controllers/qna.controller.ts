@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
+import { config } from '../config/config.js';
+import { Request, Response } from 'express';
 import { LRUCache } from 'lru-cache';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,7 +35,7 @@ export function newSession(req: Request, res: Response): void {
   res.status(200).json({ sessionId: sessionId });
 }
 
-export async function input(req: Request, res: Response, next: NextFunction): Promise<any> {
+export async function input(req: Request, res: Response): Promise<any> {
   const { sessionId, userInput } = req.body;
   if (!sessionId || !userInput) {
     return res.status(400).json({ error: 'sessionId and userInput are required' });
@@ -52,10 +53,10 @@ export async function input(req: Request, res: Response, next: NextFunction): Pr
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`
+        'Authorization': `Bearer ${config.PERPLEXITY_API_KEY}`
       },
       body: JSON.stringify({
-        model: process.env.QNA_MODEL_NAME,
+        model: config.QNA_MODEL_NAME,
         messages: history,
         stream: true,
         web_search_options: {
@@ -108,7 +109,8 @@ export async function input(req: Request, res: Response, next: NextFunction): Pr
       }
     }
   } catch (err) {
-    next(err);
+    console.error('Error getting response from chatbot:', err);
+    res.status(500).json({ error: 'Error getting response from chatbot' });
   } finally {
     res.end();
   }

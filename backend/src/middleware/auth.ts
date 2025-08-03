@@ -9,7 +9,7 @@ interface TokenPayload extends JwtPayload {
 export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.cookies.AUTH_TOKEN;
   if (!token) {
-    res.status(401).json({ message: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized' });
     return;
   }
 
@@ -18,6 +18,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     (req as AuthRequest).userId = decoded.userId;
     next();
   } catch (err) {
-    res.status(403).json({ message: 'Invalid or expired token' });
+    console.error('Error authenticating user:', err);
+    res.status(403).json({ error: 'Invalid or expired token' });
   }
 };

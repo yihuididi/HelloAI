@@ -1,16 +1,15 @@
+import { config } from './config/config.js';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import qnaRoutes from './routes/qna.routes.js';
+import recordingRoutes from './routes/recording.routes.js';
 import userRoutes from './routes/user.routes.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.PORT
 
 app.use(cors({
   credentials: true
@@ -21,6 +20,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/qna', qnaRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/recording', recordingRoutes);
 
 app.listen(PORT, async () => {
   try {
