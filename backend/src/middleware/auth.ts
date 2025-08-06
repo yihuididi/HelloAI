@@ -1,3 +1,4 @@
+import { config } from '../config/config.js';
 import { AuthRequest } from '../types/authRequest.js';
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -14,7 +15,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
+    const decoded = jwt.verify(token, config.JWT_SECRET) as TokenPayload;
     (req as AuthRequest).userId = decoded.userId;
     next();
   } catch (err) {

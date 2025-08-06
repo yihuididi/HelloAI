@@ -37,4 +37,10 @@ __pycache__/
 venv/
 .venv/
 *.wav
+
+# Temporary folders
+temp/
 temp.*
+output/
+audio/
+uploads/
