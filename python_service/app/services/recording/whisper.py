@@ -9,5 +9,5 @@ async def transcribe_audio(audio: UploadFile) -> str:
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=True) as f:
         f.write(audio_bytes)
         f.flush()
-        result = model.transcribe(f.name)
-        return result["text"]
+        result = model.transcribe(f.name, language="en")
+        return result["text"].strip()
