@@ -1,4 +1,4 @@
-import { config } from '../config/config.js';
+import config from '../config/config.js';
 import { S3Client } from '@aws-sdk/client-s3';
 
 export const r2 = new S3Client({

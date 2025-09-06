@@ -1,4 +1,4 @@
-import { config } from '../config/config.js';
+import config from '../config/config.js';
 import { Request, Response } from 'express';
 import { LRUCache } from 'lru-cache';
 import { v4 as uuidv4 } from 'uuid';

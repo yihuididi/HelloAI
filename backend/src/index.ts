@@ -1,4 +1,4 @@
-import { config } from './config/config.js';
+import config from './config/config.js';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import qnaRoutes from './routes/qna.routes.js';

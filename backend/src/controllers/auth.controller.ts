@@ -1,6 +1,6 @@
 import { loginSchema, registerSchema } from '../../../shared/authValidation.js'
 import { User as IUser } from '../../../shared/types/user.js';
-import { config } from '../config/config.js';
+import config from '../config/config.js';
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';

@@ -1,4 +1,4 @@
-import type { Result } from '../../../shared/types/recording.js';
+import type { Result, Statuses } from '../../../shared/types/recording.js';
 import mongoose from 'mongoose';
 
 export interface RecordingDocument extends mongoose.Document {
@@ -8,7 +8,8 @@ export interface RecordingDocument extends mongoose.Document {
   audioLength?: number;
   score?: number;
   transcript?: string;
-  result: Result;
+  result?: Result;
+  status: Statuses;
 }
 
 const RecordingSchema = new mongoose.Schema({
@@ -25,8 +26,7 @@ const RecordingSchema = new mongoose.Schema({
       description: String,
       summary: String,
       improvement: String,
-      transcript: String,
-      status: { type: String, required: true }
+      transcript: String
     },
     content: {
       score: {
@@ -51,19 +51,21 @@ const RecordingSchema = new mongoose.Schema({
       transcript: {
         pitch: String,
         qna: [{ question: String, answer: String }]
-      },
-      status: { type: String, required: true }
+      }
     },
     pronunciation: {
       score: Number,
       title: String,
       description: String,
       transcript: [{
-        phoneme: String,
+        text: String,
         score: Number,
-        tip: String
-      }],
-      status: { type: String, required: true }
+        phonemes: [{
+          phoneme: String,
+          score: Number,
+          tip: String
+        }]
+      }]
     },
     intonation: {
       score: Number,
@@ -75,8 +77,7 @@ const RecordingSchema = new mongoose.Schema({
         expected: Boolean,
         actual: Boolean,
         tip: String
-      }],
-      status: { type: String, required: true }
+      }]
     },
     fluency: {
       score: Number,
@@ -89,9 +90,18 @@ const RecordingSchema = new mongoose.Schema({
         text: String,
         classification: String,
         tip: String
-      }],
-      status: { type: String, required: true }
+      }]
     }
+  },
+  status: {
+    type: {
+      overview: { type: String, required: true },
+      content: { type: String, required: true },
+      pronunciation: { type: String, required: true },
+      intonation: { type: String, required: true },
+      fluency: { type: String, required: true },
+    },
+    required: true
   }
 }, {
   timestamps: true

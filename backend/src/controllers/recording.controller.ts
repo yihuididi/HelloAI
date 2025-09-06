@@ -1,9 +1,11 @@
-import { config } from '../config/config.js';
+import config from '../config/config.js';
 import { r2 } from '../config/r2.js';
 import Recording from '../models/recording.model.js';
 import User from '../models/user.model.js';
+import { analyzePronunciationFile } from '../services/pronunciationAssessment.js';
 import { AuthRequest } from '../types/authRequest.js';
 import { RecordingRequest } from '../types/recordingRequest.js';
+import { getUniqueRecordingName } from '../utils/getUniqueRecordingName.js';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import axios from 'axios';
@@ -52,35 +54,12 @@ export const createRecording = async (req: Request, res: Response): Promise<any>
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // Generate unique name for each recording
-    const baseName = 'New Recording';
-    const existingNames = await Recording.find({
-      userId,
-      name: { $regex: `${baseName}( \\d+)?$` }
-    }).select('name');
-    const usedNumbers = new Set<number>();
-    existingNames.forEach(doc => {
-      const match = doc.name.match(/^New Recording(?: (\d+))?$/);
-      if (!match) return;
-      const num = match[1] ? parseInt(match[1], 10) : 1;
-      usedNumbers.add(num);
-    })
-
-    // Find the first unused number
-    let suffix = '';
-    for (let i = 1; i <= usedNumbers.size + 1; i++) {
-      if (!usedNumbers.has(i)) {
-        suffix = i === 1 ? '' : ` ${i}`;
-        break;
-      }
-    }
-
-    const recordingName = `${baseName}${suffix}`;
+    const recordingName = await getUniqueRecordingName(userId);
 
     const newRecording = await Recording.create({
       userId: userId,
       name: recordingName,
-      result: {
+      status: {
         overview: { status: 'not_started' },
         content: { status: 'not_started' },
         pronunciation: { status: 'not_started' },
@@ -121,4 +100,38 @@ export const transcribePitch = async (req: Request, res: Response): Promise<any>
     console.error('Transcription error:', err);
     res.status(500).json({ error: 'Transcription error' });
   }
-}
+};
+
+export const analyzePronunciation = async (req: Request, res: Response): Promise<any> => {
+  const { recording, file } = req as RecordingRequest;
+  if (!file) return res.status(400).json({ error: 'No filepath provided' });
+
+  const script = req.body.script;
+  if (!script) return res.status(400).json({ error: 'No script provided' });
+
+  try {
+    await Recording.findByIdAndUpdate(recording._id, {
+      $set: { 'status.pronunciation': 'pending' }
+    });
+
+    const result = await analyzePronunciationFile(file, script);
+
+    // mark as done + save result
+    await Recording.findByIdAndUpdate(recording._id, {
+      $set: {
+        'status.pronunciation': 'done',
+        'result.pronunciation': result
+      }
+    });
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.error('Pronunciation error:', err);
+
+    await Recording.findByIdAndUpdate(recording._id, {
+      $set: { 'status.pronunciation': 'failed' }
+    });
+
+    res.status(500).json({ error: 'Pronunciation error' });
+  }
+};

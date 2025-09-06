@@ -19,6 +19,7 @@
     "form-data": "^4.0.4",
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^11.1.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.45.0",
     "mongoose": "^8.16.1",
     "multer": "^2.0.2",
     "uuid": "^11.1.0"
