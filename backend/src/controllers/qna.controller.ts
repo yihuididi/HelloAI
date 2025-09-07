@@ -1,4 +1,5 @@
 import config from '../config/config.js';
+import logger from '../config/logger.js';
 import { Request, Response } from 'express';
 import { LRUCache } from 'lru-cache';
 import { v4 as uuidv4 } from 'uuid';
@@ -32,23 +33,29 @@ const BASE_PROMPT = `
 export function newSession(req: Request, res: Response): void {
   const sessionId = uuidv4();
   sessions.set(sessionId, [{ role: 'system', content: BASE_PROMPT}]);
-  res.status(200).json({ sessionId: sessionId });
+  logger.info(`New session created: sessionId=${sessionId}`);
+  res.status(200).json({ sessionId });
 }
 
 export async function input(req: Request, res: Response): Promise<any> {
   const { sessionId, userInput } = req.body;
+
   if (!sessionId || !userInput) {
+    logger.warn('Missing sessionId or userInput in request');
     return res.status(400).json({ error: 'sessionId and userInput are required' });
   }
 
   let history = sessions.get(sessionId);
   if (!history) {
+    logger.warn(`Session not found: sessionId=${sessionId}`);
     return res.status(404).json({ error: 'Session not found' });
   }
 
+  logger.info(`Received input for sessionId=${sessionId}`);
   history.push({ role: 'user', content: userInput });
 
   try {
+    logger.debug(`Sending request to Perplexity API for sessionId=${sessionId}`);
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
@@ -66,6 +73,7 @@ export async function input(req: Request, res: Response): Promise<any> {
     });
 
     if (!response.ok || !response.body) {
+      logger.error(`Perplexity API error: status=${response.status}`);
       return res.status(500).json({ error: 'Failed to connect to Sonar' });
     }
 
@@ -85,7 +93,6 @@ export async function input(req: Request, res: Response): Promise<any> {
       if (done) break;
 
       buffer += decoder.decode(value, { stream: true });
-
       const lines = buffer.split('\n');
       buffer = lines.pop() || ''; // keep incomplete line for next loop
 
@@ -100,16 +107,18 @@ export async function input(req: Request, res: Response): Promise<any> {
           const delta = parsed?.choices?.[0]?.delta?.content;
           if (delta) {
             assistantReply += delta;
-            res.write(`data: ${delta}\n\n`); // Format is SSE compliant
+            res.write(`data: ${delta}\n\n`); // SSE format
           }
         } catch (err) {
-          console.error('JSON parse error for:', jsonStr);
-          console.error(err);
+          logger.error(`JSON parse error for line: ${jsonStr}`);
+          logger.error(err);
         }
       }
     }
+
+    logger.info(`Assistant reply streamed for sessionId=${sessionId}, length=${assistantReply.length}`);
   } catch (err) {
-    console.error('Error getting response from chatbot:', err);
+    logger.error(`Error getting response from chatbot for sessionId=${sessionId}: ${err}`);
     res.status(500).json({ error: 'Error getting response from chatbot' });
   } finally {
     res.end();
@@ -118,11 +127,14 @@ export async function input(req: Request, res: Response): Promise<any> {
 
 export function endSession(req: Request, res: Response): void {
   const { sessionId } = req.body;
+
   if (!sessionId) {
+    logger.warn('endSession called without sessionId');
     res.status(400).json({ error: 'sessionId is required' });
     return;
   }
 
   sessions.delete(sessionId);
+  logger.info(`Session ended: sessionId=${sessionId}`);
   res.status(200).json({ message: 'Session ended' });
 }

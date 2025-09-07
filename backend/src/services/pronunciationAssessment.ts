@@ -1,5 +1,6 @@
 import { PronunciationWord, Title } from '../../../shared/types/recording.js';
 import config from '../config/config.js';
+import logger from '../config/logger.js';
 import { getTitle } from '../utils/getTitle.js';
 import fs from 'fs';
 import sdk from 'microsoft-cognitiveservices-speech-sdk';
@@ -62,23 +63,23 @@ export async function analyzePronunciationFile(
   file: Express.Multer.File,
   script: string
 ) {
-  console.log('[DEBUG] analyzePronunciationFile called');
-  console.log('[DEBUG] File path:', file?.path);
-  console.log('[DEBUG] Script length:', script?.length);
+  logger.debug('analyzePronunciationFile called');
+  logger.debug(`File path: ${file?.path}`);
+  logger.debug(`Script length: ${script?.length}`);
 
   return new Promise((resolve, reject) => {
     try {
       if (!file.path || !fs.existsSync(file.path)) {
-        console.error('[ERROR] Audio file not found:', file?.path);
+        logger.error(`Audio file not found: ${file?.path}`);
         throw new Error('Audio file not found on disk.');
       }
-      console.log('[DEBUG] Audio file found on disk.');
+      logger.debug('Audio file found on disk.');
 
       const audioBuffer = fs.readFileSync(file.path);
-      console.log('[DEBUG] Audio file read. Size:', audioBuffer.length, 'bytes');
+      logger.debug(`Audio file read. Size: ${audioBuffer.length} bytes`);
 
       const pushStream = sdk.AudioInputStream.createPushStream();
-      console.log('[DEBUG] Created pushStream');
+      logger.debug('Created pushStream');
 
       pushStream.write(
         audioBuffer.buffer.slice(
@@ -86,16 +87,16 @@ export async function analyzePronunciationFile(
           audioBuffer.byteOffset + audioBuffer.byteLength
         )
       );
-      console.log('[DEBUG] Audio written to pushStream');
+      logger.debug('Audio written to pushStream');
       pushStream.close();
-      console.log('[DEBUG] pushStream closed');
+      logger.debug('pushStream closed');
 
       const audioConfig = sdk.AudioConfig.fromStreamInput(pushStream);
       const speechConfig = sdk.SpeechConfig.fromSubscription(
         config.AZURE_SPEECH_KEY,
         config.AZURE_REGION
       );
-      console.log('[DEBUG] Speech config created with region:', config.AZURE_REGION);
+      logger.debug(`Speech config created with region: ${config.AZURE_REGION}`);
 
       speechConfig.speechRecognitionLanguage = 'en-US';
 
@@ -107,48 +108,44 @@ export async function analyzePronunciationFile(
       );
       assessmentConfig.enableProsodyAssessment = true;
       assessmentConfig.phonemeAlphabet = 'IPA';
-      console.log('[DEBUG] PronunciationAssessmentConfig created');
+      logger.debug('PronunciationAssessmentConfig created');
 
       const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
-      console.log('[DEBUG] Recognizer created');
+      logger.debug('Recognizer created');
 
       assessmentConfig.applyTo(recognizer);
-      console.log('[DEBUG] Assessment config applied to recognizer');
+      logger.debug('Assessment config applied to recognizer');
 
       let totalScore = 0;
       let totalWords = 0;
       const words: PronunciationWord[] = [];
 
       recognizer.recognized = (_, e) => {
-        console.log('[DEBUG] recognizer.recognized fired');
+        logger.debug('recognizer.recognized fired');
         if (e.result.reason === sdk.ResultReason.RecognizedSpeech) {
-          console.log('[DEBUG] Recognized speech:', e.result.text);
+          logger.debug(`Recognized speech: ${e.result.text}`);
           try {
             const json = e.result.properties.getProperty(
               sdk.PropertyId.SpeechServiceResponse_JsonResult
             );
-            console.log('[DEBUG] Raw JSON result length:', json.length);
+            logger.debug(`Raw JSON result length: ${json.length}`);
 
             const res = JSON.parse(json);
             const nbest = res.NBest[0];
 
             if (nbest.Words) {
-              console.log('[DEBUG] Words recognized:', nbest.Words.length);
+              logger.debug(`Words recognized: ${nbest.Words.length}`);
               totalScore += nbest.PronunciationAssessment.PronScore * nbest.Words.length;
               totalWords += nbest.Words.length;
 
-              // Build word JSON
               nbest.Words.forEach((w: any) => {
-                console.log('[DEBUG] Word:', w.Word, 'Score:', w.PronunciationAssessment.AccuracyScore);
-
-                // Build phonemes JSON for each word
                 const phonemes = w.Phonemes.map((p: any) => {
                   const phoneme = p.Phoneme;
                   const phonemeScore = p.PronunciationAssessment.AccuracyScore;
                   const tip = phonemeScore < 70 ? GET_TIP[phoneme] : null;
 
                   return {
-                    phoneme: phoneme,
+                    phoneme,
                     score: phonemeScore,
                     ...(tip ? { tip } : {}),
                   };
@@ -161,47 +158,44 @@ export async function analyzePronunciationFile(
                 });
               });
             } else {
-              console.log('[DEBUG] No words in NBest result');
+              logger.debug('No words in NBest result');
             }
           } catch (err) {
-            console.error('[ERROR] Failed to parse recognition result JSON:', err);
+            logger.error(`Failed to parse recognition result JSON: ${err}`);
           }
         } else {
-          console.log('[DEBUG] Recognition result reason:', e.result.reason);
+          logger.debug(`Recognition result reason: ${e.result.reason}`);
         }
       };
 
       recognizer.sessionStopped = () => {
-        console.log('[DEBUG] Session stopped. Total words:', totalWords, 'Total score:', totalScore);
+        logger.debug(`Session stopped. Total words: ${totalWords}, Total score: ${totalScore}`);
         recognizer.stopContinuousRecognitionAsync(() => {
           recognizer.close();
-          console.log('[DEBUG] Recognizer closed. Resolving promise.');
+          logger.debug('Recognizer closed. Resolving promise.');
 
-          // Build pronunciation result JSON
           const overallScore = Math.round(totalScore / totalWords);
           const title = getTitle(overallScore);
           const description = GET_DESCRIPTION[title];
-          const result = {
+          resolve({
             score: overallScore,
-            title: title,
-            description: description,
+            title,
+            description,
             transcript: words
-          }
-          resolve(result);
+          });
         });
       };
 
       recognizer.canceled = (_, e) => {
-        console.log('[DEBUG] Canceled event. Reason:', e.reason);
+        logger.debug(`Canceled event. Reason: ${e.reason}`);
 
         if (e.reason === sdk.CancellationReason.EndOfStream) {
-          // Normal case, don't treat as error
-          console.log('[DEBUG] Cancellation due to EndOfStream (safe to ignore)');
+          logger.debug('Cancellation due to EndOfStream (safe to ignore)');
           return;
         }
 
         if (e.reason === sdk.CancellationReason.Error) {
-          console.error('[ERROR] Recognition canceled due to error:', e.errorDetails);
+          logger.error(`Recognition canceled due to error: ${e.errorDetails}`);
           recognizer.stopContinuousRecognitionAsync(() => {
             recognizer.close();
             reject(new Error(`Recognition canceled: [${e.reason}] ${e.errorDetails}`));
@@ -211,15 +205,15 @@ export async function analyzePronunciationFile(
 
       recognizer.startContinuousRecognitionAsync(
         () => {
-          console.log('[DEBUG] Recognition started successfully');
+          logger.debug('Recognition started successfully');
         },
         (err) => {
-          console.error('[ERROR] Failed to start recognition:', err);
+          logger.error(`Failed to start recognition: ${err}`);
           reject(new Error('Failed to start recognition: ' + err));
         }
       );
     } catch (outerErr) {
-      console.error('[ERROR] analyzePronunciationFile outer exception:', outerErr);
+      logger.error(`analyzePronunciationFile outer exception: ${outerErr}`);
       reject(outerErr);
     }
   });

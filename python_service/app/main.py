@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from app.config.logger import logger
 from app.routes import recording
 
 app = FastAPI()
@@ -13,3 +14,4 @@ app.add_middleware(
 )
 
 app.include_router(recording.router, prefix="/api")
+logger.info("FastAPI application initialized")

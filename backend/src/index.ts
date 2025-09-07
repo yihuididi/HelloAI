@@ -1,5 +1,6 @@
 import config from './config/config.js';
-import { connectDB } from './config/db.js';
+import connectDB from './config/db.js';
+import logger from './config/logger.js';
 import authRoutes from './routes/auth.routes.js';
 import qnaRoutes from './routes/qna.routes.js';
 import recordingRoutes from './routes/recording.routes.js';
@@ -25,9 +26,9 @@ app.use('/api/recording', recordingRoutes);
 app.listen(PORT, async () => {
   try {
     await connectDB();
-    console.log('Server started at http://localhost:' + PORT);
+    logger.info(`Server started successfully at http://localhost:${PORT}`);
   } catch (err) {
-    console.error('Failed to start server:', err);
+    logger.error('Failed to start server:', err);
     process.exit(1);
   }
 });
